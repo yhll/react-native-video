@@ -10,6 +10,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
+import android.content.pm.ActivityInfo;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Handler;
@@ -1914,7 +1915,11 @@ class ReactExoplayerView extends FrameLayout implements
         if (activity == null) {
             return;
         }
-
+        if(fullscreen==true){
+            activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        }else{
+            activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        }
         Window window = activity.getWindow();
         View decorView = window.getDecorView();
         int uiOptions;
