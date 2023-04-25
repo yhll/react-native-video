@@ -201,6 +201,7 @@ class ReactExoplayerView extends FrameLayout implements
     private long contentStartTime = -1L;
     private boolean disableDisconnectError;
     private boolean preventsDisplaySleepDuringVideoPlayback = true;
+    private boolean linearPlayback = false;
     private float mProgressUpdateInterval = 250.0f;
     private boolean playInBackground = false;
     private Map<String, String> requestHeaders;
@@ -383,8 +384,25 @@ class ReactExoplayerView extends FrameLayout implements
     private void initializePlayerControl() {
         if (playerControlView == null) {
             playerControlView = new PlayerControlView(getContext());
+            playerControlView.setShowTimeoutMs(3000);
         }
-
+        ReactTimeBar  timeBar = playerControlView.findViewById(R.id.exo_progress);
+        if(linearPlayback) {
+            playerControlView.setShowPreviousButton(false);
+            playerControlView.setShowNextButton(false);
+            playerControlView.setEnabled(false);
+            playerControlView.setShowFastForwardButton(false);
+            playerControlView.setShowRewindButton(false);
+            timeBar.setEnabled(false);
+        }else {
+            playerControlView.setShowPreviousButton(false);
+            playerControlView.setShowNextButton(false);
+            playerControlView.setShowFastForwardButton(true);
+            playerControlView.setShowRewindButton(true);
+            playerControlView.setEnabled(true);
+            timeBar.resetEnableSeek();
+            timeBar.setEnabled(true);
+        }
         if (fullScreenPlayerView == null) {
             fullScreenPlayerView = new FullScreenPlayerView(getContext(), exoPlayerView, playerControlView, new OnBackPressedCallback(true) {
                 @Override
@@ -403,6 +421,10 @@ class ReactExoplayerView extends FrameLayout implements
             @Override
             public void onClick(View v) {
                 if (!isPlayingAd()) {
+                    ReactTimeBar  timeBar = playerControlView.findViewById(R.id.exo_progress);
+                    if(!linearPlayback) {
+                        timeBar.resetEnableSeek();
+                    }
                     togglePlayerControlVisibility();
                 }
             }
@@ -1098,7 +1120,7 @@ class ReactExoplayerView extends FrameLayout implements
                 }
                 // Setting the visibility for the playerControlView
                 if (playerControlView != null) {
-                    playerControlView.show();
+                    //playerControlView.show();
                 }
                 setKeepScreenOn(preventsDisplaySleepDuringVideoPlayback);
                 break;
@@ -1575,6 +1597,27 @@ class ReactExoplayerView extends FrameLayout implements
 
     public void setPreventsDisplaySleepDuringVideoPlayback(boolean preventsDisplaySleepDuringVideoPlayback) {
         this.preventsDisplaySleepDuringVideoPlayback = preventsDisplaySleepDuringVideoPlayback;
+    }
+    public void setPropLinearPlayback(boolean linearPlayback) {
+        this.linearPlayback = linearPlayback;
+        if (playerControlView != null) {
+            ReactTimeBar  timeBar = playerControlView.findViewById(R.id.exo_progress);
+            if(linearPlayback) {
+                playerControlView.setShowPreviousButton(false);
+                playerControlView.setShowNextButton(false);
+                playerControlView.setEnabled(false);
+                playerControlView.setShowFastForwardButton(false);
+                timeBar.resetEnableSeek();
+                timeBar.setEnabled(false);
+            }else {
+                playerControlView.setShowPreviousButton(false);
+                playerControlView.setShowNextButton(false);
+                playerControlView.setShowFastForwardButton(true);
+                playerControlView.setEnabled(true);
+                timeBar.resetEnableSeek();
+                timeBar.setEnabled(true);
+            }
+        }
     }
 
     public void disableTrack(int rendererIndex) {

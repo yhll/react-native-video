@@ -83,6 +83,7 @@ public class ReactExoplayerViewManager extends ViewGroupManager<ReactExoplayerVi
     private static final String PROP_CONTROLS = "controls";
 
     private static final String PROP_SUBTITLE_STYLE = "subtitleStyle";
+    private static final String PROP_LINEAR_PLAY_BACK = "linearPlayback";
 
     private ReactExoplayerConfig config;
 
@@ -219,6 +220,12 @@ public class ReactExoplayerViewManager extends ViewGroupManager<ReactExoplayerVi
     public void setPreventsDisplaySleepDuringVideoPlayback(final ReactExoplayerView videoView, final boolean preventsSleep) {
         videoView.setPreventsDisplaySleepDuringVideoPlayback(preventsSleep);
     }
+
+    @ReactProp(name = PROP_LINEAR_PLAY_BACK, defaultBoolean = false)
+    public void setPropLinearPlayback(final ReactExoplayerView videoView, final boolean linearPlayback) {
+        videoView.setPropLinearPlayback(linearPlayback);
+    }
+
 
     @ReactProp(name = PROP_SELECTED_VIDEO_TRACK)
     public void setSelectedVideoTrack(final ReactExoplayerView videoView,

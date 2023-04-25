@@ -519,6 +519,7 @@ Video.propTypes = {
   contentStartTime: PropTypes.number,
   disableFocus: PropTypes.bool,
   focusable: PropTypes.bool,
+  linearPlayback: PropTypes.bool,
   disableBuffering: PropTypes.bool,
   controls: PropTypes.bool,
   audioOnly: PropTypes.bool,
